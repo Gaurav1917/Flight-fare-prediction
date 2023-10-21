@@ -1,0 +1,32 @@
+pickle_file_path = '/content/drive/MyDrive/Flight_fare_prediction/model2.pickle'
+with open(pickle_file_path , 'rb') as model_file:
+  loaded_model = pickle.load(model_file)
+
+!pip install gradio
+
+import gradio as gr
+import numpy as np
+
+def flight_fare(C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11):
+  input_array = np.array([[C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11]])
+  pred_score = loaded_model.predict(input_array)
+  return np.round(pred_score[0],2)
+
+C1 = gr.components.Slider(minimum=0,maximum=8,default=1,label='Airline',info=['Vistara=0','Air India=1','Indigo=2',
+                     'AirAsia=3','GO FIRST=4','SpiceJet=5','AkasaAir=6','AllianceAir=7','StarAir=8'])
+C2 = gr.components.Slider(minimum=0,maximum=3,default=1,label='Class',info=['First=0','Business=1','Premium Economy=2','Economy=3'])
+C3 = gr.components.Slider(minimum=0,maximum=6,default=1,label='Source',info=['Ahmedabad=0','Bangalore=1','Chennai=2','Delhi=3','Hyderabad=4','Kolkata=5','Mumbai=6'])
+C4 = gr.components.Slider(minimum=0,maximum=3,default=1,label='Departure',info=['After 6 PM=0','Before 6 AM=1','6 AM - 12 PM=2','12 PM - 6 PM=3'])
+C5= gr.components.Slider(minimum=0,maximum=2,default=1,label='Total_stops',info=['1-stop=0','2+-stop=1','non-stop=2'])
+C6= gr.components.Slider(minimum=0,maximum=3,default=1,label='Arrival',info=['After 6 PM=0','Before 6 AM=1','6 AM - 12 PM=2','12 PM - 6 PM=3'])
+C7 = gr.components.Slider(minimum=0,maximum=6,default=1,label='Destination',info=['Ahmedabad=0','Bangalore=1','Chennai=2','Delhi=3','Hyderabad=4','Kolkata=5','Mumbai=6'])
+C8= gr.components.Slider(minimum=0.75,maximum=44,default=1,label='Duration_in_hours')
+C9= gr.components.Slider(minimum=1,maximum=50,default=3,label='Days_left')
+C10= gr.components.Slider(minimum=1,maximum=31,default=3,label='Day')
+C11= gr.components.Slider(minimum=1,maximum=3,default=2,label='month')
+
+op = gr.components.Textbox(label='Flight Fare(in rupees)')
+gr.Interface(fn=flight_fare,inputs=[C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11],outputs=op,live=True).launch(debug=True)
+
+
+
