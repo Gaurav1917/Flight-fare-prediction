@@ -1,4 +1,3 @@
 #)goggle colab
 #)Python
-#)VGG16 model
 #)Gradio for deployment
