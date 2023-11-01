@@ -74,11 +74,8 @@ The variation in price with change in Source and Destination is given by:
 
 #### Sample 1
 
-![Screenshot (19)](https://github.com/Gaurav1917/Flight-fare-prediction/assets/146158309/d1d66e64-8785-4555-88e7-6836e1139e03)
+![Screenshot (25)](https://github.com/Gaurav1917/Flight-fare-prediction/assets/146158309/23f31564-3c92-4836-9318-fe2635fd3f1a)
 
-#### Sample 2
-
-![Screenshot (20)](https://github.com/Gaurav1917/Flight-fare-prediction/assets/146158309/9d854fe0-2f94-45df-a623-cb37d0426bc3)
 
 
                    
