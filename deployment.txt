@@ -1,32 +1,74 @@
-pickle_file_path = '/content/drive/MyDrive/Flight_fare_prediction/model2.pickle'
-with open(pickle_file_path , 'rb') as model_file:
-  loaded_model = pickle.load(model_file)
+C1_mapping = {'Vistara':0,'Air India':1,'Indigo':2,'AirAsia':3,'GO FIRST':4,'SpiceJet':5,'AkasaAir':6,
+                                      'AllianceAir':7,'StarAir':8}
+C2_mapping = {'First':0,'Business':1,'Premium Economy':2,'Economy':3}
+C3_mapping = {'Ahmedabad':0,'Bangalore':1,'Chennai':2,'Delhi':3,'Hyderabad':4,'Kolkata':5,'Mumbai':6}
+C4_mapping = {'After 6 PM':0,'Before 6 AM':1,'6 AM - 12 PM':2,'12 PM - 6 PM':3}
+C5_mapping = {'1-stop':0,'2+-stop':1,'non-stop':2}
+C6_mapping = {'After 6 PM':0,'Before 6 AM':1,'6 AM - 12 PM':2,'12 PM - 6 PM':3}
+C7_mapping = {'Ahmedabad':0,'Bangalore':1,'Chennai':2,'Delhi':3,'Hyderabad':4,'Kolkata':5,'Mumbai':6}
 
-!pip install gradio
+import joblib
+loaded_model = joblib.load('./model (1).h5')
+
 
 import gradio as gr
 import numpy as np
-
 def flight_fare(C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11):
-  input_array = np.array([[C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11]])
-  pred_score = loaded_model.predict(input_array)
-  return np.round(pred_score[0],2)
+    if C1 in C1_mapping:
+        C1_value =C1_mapping[C1]
+    else:
+        C1_value=-1
+        
+    if C2 in C2_mapping:
+        C2_value = C2_mapping[C2]
+    else:
+        C2_value=-1
 
-C1 = gr.components.Slider(minimum=0,maximum=8,default=1,label='Airline',info=['Vistara=0','Air India=1','Indigo=2',
-                     'AirAsia=3','GO FIRST=4','SpiceJet=5','AkasaAir=6','AllianceAir=7','StarAir=8'])
-C2 = gr.components.Slider(minimum=0,maximum=3,default=1,label='Class',info=['First=0','Business=1','Premium Economy=2','Economy=3'])
-C3 = gr.components.Slider(minimum=0,maximum=6,default=1,label='Source',info=['Ahmedabad=0','Bangalore=1','Chennai=2','Delhi=3','Hyderabad=4','Kolkata=5','Mumbai=6'])
-C4 = gr.components.Slider(minimum=0,maximum=3,default=1,label='Departure',info=['After 6 PM=0','Before 6 AM=1','6 AM - 12 PM=2','12 PM - 6 PM=3'])
-C5= gr.components.Slider(minimum=0,maximum=2,default=1,label='Total_stops',info=['1-stop=0','2+-stop=1','non-stop=2'])
-C6= gr.components.Slider(minimum=0,maximum=3,default=1,label='Arrival',info=['After 6 PM=0','Before 6 AM=1','6 AM - 12 PM=2','12 PM - 6 PM=3'])
-C7 = gr.components.Slider(minimum=0,maximum=6,default=1,label='Destination',info=['Ahmedabad=0','Bangalore=1','Chennai=2','Delhi=3','Hyderabad=4','Kolkata=5','Mumbai=6'])
-C8= gr.components.Slider(minimum=0.75,maximum=44,default=1,label='Duration_in_hours')
-C9= gr.components.Slider(minimum=1,maximum=50,default=3,label='Days_left')
-C10= gr.components.Slider(minimum=1,maximum=31,default=3,label='Day')
-C11= gr.components.Slider(minimum=1,maximum=3,default=2,label='month')
+    if C3 in C3_mapping:
+        C3_value = C3_mapping[C3]
+    else:
+        C3_value=-1
+
+    if C4 in C4_mapping:
+        C4_value=C4_mapping[C4]
+    else:
+        C4_value=-1
+
+    if C5 in C5_mapping:
+        C5_value = C5_mapping[C5]
+    else:
+        C5_value=-1
+
+    if C6 in C6_mapping:
+        C6_value = C6_mapping[C6]
+    else:
+        C6_value=-1
+
+    if C7 in C7_mapping:
+        C7_value = C7_mapping[C7]
+    else:
+        C7_value = -1
+        
+    
+            
+    
+    pred_score = loaded_model.predict([[C1_value,C2_value,C3_value,C4_value,C5_value,C6_value,C7_value,C8,C9,C10,C11]])
+    return np.round(pred_score[0],2)
+
+
+C21 = gr.components.Dropdown(choices=['Vistara','Air India','Indigo','AirAsia','GO FIRST','SpiceJet','AkasaAir',
+                                      'AllianceAir','StarAir'],label='Select an Airline')
+C22 = gr.components.Dropdown(choices=['First','Business','Premium Economy','Economy'],label='Select a class')
+C23 = gr.components.Dropdown(choices=['Ahmedabad','Bangalore','Chennai','Delhi','Hyderabad','Kolkata','Mumbai'],label='Select the Source')
+C24 = gr.components.Dropdown(choices=['After 6 PM','Before 6 AM','6 AM - 12 PM','12 PM - 6 PM'],label='Departure Time')
+C25= gr.components.Dropdown(choices=['1-stop','2+-stop','non-stop'],label='Total stop')
+C26= gr.components.Dropdown(choices=['After 6 PM','Before 6 AM','6 AM - 12 PM','12 PM - 6 PM'],label='Arrival Time')
+C27 = gr.components.Dropdown(choices=['Ahmedabad','Bangalore','Chennai','Delhi','Hyderabad','Kolkata','Mumbai'],label='Destination')
+C28= gr.components.Slider(minimum=0.75,maximum=44,default=1,label='Duration_in_hours')
+C29= gr.components.Slider(minimum=1,maximum=50,default=3,label='Days_left')
+C30= gr.components.Slider(minimum=1,maximum=31,default=3,label='Day')
+C31= gr.components.Slider(minimum=1,maximum=3,default=2,label='month')
 
 op = gr.components.Textbox(label='Flight Fare(in rupees)')
-gr.Interface(fn=flight_fare,inputs=[C1,C2,C3,C4,C5,C6,C7,C8,C9,C10,C11],outputs=op,live=True).launch(debug=True)
-
-
+gr.Interface(fn=flight_fare,inputs=[C21,C22,C23,C24,C25,C26,C27,C28,C29,C30,C31],outputs=op,live=True,theme='upsatwal/mlsc_tiet').launch(debug=True) 
 
